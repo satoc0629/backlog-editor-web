@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Issues</title>
+</head>
+<script>
+    function update(event, id) {
+        const issueKey = document.getElementsByName(`issuerKey_${id}`)[0].innerHTML
+        const summary = document.getElementsByName(`summary_${id}`)[0].value
+        const estimatedHours = document.getElementsByName(`estimatedHours_${id}`)[0].value
+        const ticket = {
+            summary: summary,
+            estimatedHours: estimatedHours
+        }
+        fetch(`/backlog/ticket/${issueKey}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(ticket)
+        }).then(r => {
+            console.log(`r.headers`, r.headers)
+            const info = document.getElementById("info")
+            info.innerText = `updated ${issueKey}`
+        })
+    }
+</script>
+<style>
+    table, td {
+        border: 1px solid #333
+    }
+
+    thead,
+    tfoot {
+        background-color: #333;
+        color: #fff;
+    }
+</style>
+<body>
+<h5>
+    Update AccessToken
+</h5>
+<a data-th-href="${authStartURI}">Authz</a>
+<h5>
+    Issues
+</h5>
+<label id="info"></label>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>IssueKey</th>
+        <th>Summary</th>
+        <th>Category</th>
+        <th>EstimateHour</th>
+        <th>ActualHour</th>
+    </tr>
+    </thead>
+    <tbody th:each="record : ${issues}">
+    <tr data-th-id="${record.id}">
+        <td data-th-text="${record.id}"></td>
+        <td data-th-name="|issuerKey_${record.id}|" data-th-text="${record.issueKey}"></td>
+        <td>
+            <input data-th-name="|summary_${record.id}|" type="text" th:value="${record.summary}">
+        </td>
+        <td data-th-text="${record.category[0].name}"></td>
+        <td>
+            <input data-th-name="|estimatedHours_${record.id}|" type="number" th:value="${record.estimatedHours}">
+        </td>
+        <td data-th-text="${record.actualHours}"></td>
+        <td>
+            <button type="button" th:onclick="|update(event, ${record.id})|">Update</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

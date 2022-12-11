@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Hellow Bakclog Application</title>
+</head>
+<body>
+<p th:text="'Hello, ' + ${name} + '!'" />
+<a data-th-href="${authStartURI}">Authz</a><br/>
+<a data-th-href="${'/backlog/issues'}">Issues</a>
+</body>
+</html>

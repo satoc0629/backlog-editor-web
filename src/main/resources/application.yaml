@@ -1,0 +1,31 @@
+server:
+  port: 8050
+spring:
+  security:
+    oauth2:
+      client:
+        provider:
+          backlog:
+            authorization-uri: ${backlog.baseURL}/OAuth2AccessRequest.action
+            token-uri: ${backlog.baseURL}/api/v2/oauth2/token
+        registration:
+          backlog:
+            authorization-grant-type: authorization_code
+            client-id: ${CLIENT_ID}
+            client-secret: ${CLIENT_SECRET}
+            redirect-uri: http://localhost:8050/login/oauth2/code/backlog
+#            redirect-uri: http://localhost:8050/manual/oauth2/code
+            client-name: backlog_api
+            provider: backlog
+  thymeleaf:
+    cache: false
+  resources:
+    cache-period:0
+  jmx:
+    enabled: true
+backlog.baseURL: ${BACKLOG_BASEURL}
+backlog.auth_start_uri: ${spring.security.oauth2.client.provider.backlog.authorization-uri}?response_type=code&client_id=${spring.security.oauth2.client.registration.backlog.client-id}&redirect_uri=http://localhost:8050/manual/oauth2/code&state=123
+backlog.auth_redirect_uri: http://localhost:8050/manual/oauth2/code
+logging:
+  level:
+    org.springframework.web.client.RestTemplate: TRACE
